@@ -2,204 +2,160 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EPHRAIM ADMIN - Premium Control Center</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>EPHRAIM ADMIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
         :root {
-            --bg-main: #FDFBF9;
-            --bg-sidebar: #FFFFFF;
-            --primary-brown: #4E342E;
-            --accent-beige: #D7CCC8;
-            --text-dark: #212121;
+            --primary: #4E342E;
+            --primary-light: #EFEBE9;
+            --accent: #D7CCC8;
+            --bg: #F7F4F2;
+            --card: #FFFFFF;
+            --text: #212121;
             --text-light: #757575;
-            --status-pending: #EF5350;
-            --status-completed: #66BB6A;
-            --category-locker: #7E57C2;
-            --category-info: #0288D1;
-            --shadow-light: 0 4px 6px rgba(0,0,0,0.03);
-            --shadow-hover: 0 10px 15px rgba(0,0,0,0.08);
-            --premium-easing: cubic-bezier(0.4, 0, 0.2, 1);
+            --pending: #EF5350;
+            --completed: #66BB6A;
+            --locker: #7E57C2;
+            --info: #0288D1;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --radius: 16px;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); font-family: 'Noto Sans KR', sans-serif; font-weight: 300; color: var(--text); min-height: 100vh; }
 
-        body { background-color: var(--bg-main); margin: 0; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
+        .top-bar { background: var(--card); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .top-bar-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--primary); letter-spacing: 2px; display: flex; flex-direction: column; line-height: 1; }
+        .top-bar-logo small { font-family: 'Noto Sans KR', sans-serif; font-size: 0.65rem; color: var(--text-light); font-weight: 300; letter-spacing: 1px; margin-top: 3px; }
+        .conn-badge { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; padding: 6px 12px; border-radius: 20px; background: #FFEBEE; color: #C62828; transition: all 0.3s; }
+        .conn-badge.on { background: #E8F5E9; color: #2E7D32; }
+        .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #EF5350; flex-shrink: 0; }
+        .conn-badge.on .conn-dot { background: #66BB6A; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-        .sidebar { width: 260px; background-color: var(--bg-sidebar); display: flex; flex-direction: column; border-right: 1px solid rgba(0,0,0,0.05); padding: 40px 20px; box-sizing: border-box; flex-shrink: 0; }
-        .admin-logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary-brown); font-weight: 700; letter-spacing: 2px; margin-bottom: 60px; text-align: center; display: flex; flex-direction: column; }
-        .admin-logo span { font-family: 'Noto Sans KR', sans-serif; font-weight: 300; font-size: 0.9rem; color: var(--text-light); letter-spacing: 0; margin-top: 5px; }
-        .nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-        .nav-item { padding: 15px 20px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; color: var(--text-light); display: flex; align-items: center; gap: 15px; font-weight: 400; font-size: 0.95rem; }
-        .nav-item:hover, .nav-item.active { background-color: #F8F9FA; color: var(--primary-brown); font-weight: 500; }
-        .nav-item i { font-size: 1.1rem; width: 20px; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px 16px 0; }
+        .stat-card { background: var(--card); border-radius: var(--radius); padding: 18px 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.03); transition: all 0.3s; }
+        .stat-label { font-size: 0.75rem; color: var(--text-light); font-weight: 500; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--primary); line-height: 1; }
+        .stat-value small { font-size: 0.85rem; font-weight: 300; color: var(--text-light); margin-left: 3px; }
+        .stat-card.alert-red { background: #FFF5F5; border-color: #FFCDD2; }
+        .stat-card.alert-red .stat-value { color: var(--pending); }
+        .stat-card.alert-purple { background: #F5F0FF; border-color: #D1C4E9; }
+        .stat-card.alert-purple .stat-value { color: var(--locker); }
 
-        /* Firebase 연결 상태 표시 */
-        .connection-status { margin-top: auto; padding: 12px 16px; border-radius: 10px; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
-        .connection-status.connected { background: #E8F5E9; color: #2E7D32; }
-        .connection-status.disconnected { background: #FFEBEE; color: #C62828; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .connected .status-dot { background: #66BB6A; animation: pulse 2s infinite; }
-        .disconnected .status-dot { background: #EF5350; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .filter-wrap { padding: 14px 16px 0; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+        .filter-wrap::-webkit-scrollbar { display: none; }
+        .filter-btn { display: inline-block; padding: 7px 14px; border-radius: 20px; border: 1px solid #E0E0E0; background: #fff; font-size: 0.8rem; cursor: pointer; color: var(--text-light); font-family: inherit; margin-right: 8px; transition: all 0.2s; }
+        .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .section-title { padding: 16px 16px 10px; font-size: 0.95rem; font-weight: 500; color: var(--text); display: flex; align-items: center; justify-content: space-between; }
+        .section-title span { font-size: 0.8rem; font-weight: 300; color: var(--text-light); }
 
-        .main-header { background-color: #FFFFFF; padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.03); }
-        .header-title { margin: 0; font-size: 1.6rem; font-weight: 500; color: var(--text-dark); }
-        
-        .reset-btn { margin-left: 15px; padding: 6px 12px; background-color: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.8rem; color: #757575; cursor: pointer; transition: all 0.2s; }
-        .reset-btn:hover { background-color: #eeeeee; color: #EF5350; border-color: #EF5350; }
-        
-        .header-branch-select { display: flex; align-items: center; gap: 10px; color: var(--text-light); font-size: 0.95rem; }
+        .cards-wrap { padding: 0 16px 100px; display: flex; flex-direction: column; gap: 12px; }
 
-        /* 필터 바 */
-        .filter-bar { padding: 15px 40px 0; display: flex; gap: 10px; flex-wrap: wrap; }
-        .filter-btn { padding: 7px 16px; border-radius: 20px; border: 1px solid #E0E0E0; background: #fff; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; color: var(--text-light); font-family: inherit; }
-        .filter-btn:hover { border-color: var(--primary-brown); color: var(--primary-brown); }
-        .filter-btn.active { background: var(--primary-brown); color: #fff; border-color: var(--primary-brown); }
+        .inquiry-card { background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.03); animation: fadeUp 0.3s ease forwards; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-        .stats-container { padding: 20px 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
-        .stats-card { background-color: #FFFFFF; border-radius: 20px; padding: 25px; box-shadow: var(--shadow-light); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s var(--premium-easing); border: 1px solid rgba(0,0,0,0.02); }
-        .stats-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
-        .stats-card-title { font-size: 0.95rem; color: var(--text-light); margin-bottom: 15px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-        .stats-card-value { font-size: 2.2rem; font-weight: 700; color: var(--primary-brown); margin: 0; }
-        .stats-card-value span { font-size: 1rem; color: var(--text-light); font-weight: 300; margin-left: 5px; }
-        .critical-text { color: var(--status-pending) !important; }
-        .locker-text { color: var(--category-locker) !important; }
+        .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .card-id { font-size: 0.75rem; color: var(--text-light); }
+        .cat-badge { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: var(--primary-light); color: var(--primary); }
+        .cat-urgent { background: #FFEBEE; color: var(--pending); }
+        .cat-locker { background: #EDE7F6; color: var(--locker); }
+        .cat-inquiry { background: #E1F5FE; color: var(--info); }
+        .status-badge { font-size: 0.72rem; font-weight: 500; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+        .status-pending { background: #FFEBEE; color: var(--pending); }
+        .status-done { background: #E8F5E9; color: var(--completed); }
+        .card-branch { font-size: 0.95rem; font-weight: 500; margin-bottom: 4px; color: var(--primary); }
+        .card-seat { font-size: 0.8rem; color: var(--text-light); margin-bottom: 8px; }
+        .card-content { font-size: 0.9rem; line-height: 1.5; color: var(--text); margin-bottom: 12px; }
+        .card-bottom { display: flex; align-items: center; justify-content: space-between; }
+        .card-time { font-size: 0.75rem; color: var(--text-light); }
+        .complete-btn { background: var(--primary); color: #fff; border: none; padding: 9px 18px; border-radius: 10px; font-size: 0.82rem; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .complete-btn:active { transform: scale(0.96); background: #3E2723; }
 
-        .table-section { padding: 0 40px 40px 40px; flex-grow: 1; overflow: hidden; display: flex; flex-direction: column; }
-        .table-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .table-title { font-size: 1.1rem; font-weight: 500; margin: 0; color: var(--text-dark); }
-        
-        .table-container { background-color: #FFFFFF; border-radius: 20px; box-shadow: var(--shadow-light); flex-grow: 1; overflow: auto; border: 1px solid rgba(0,0,0,0.02); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 1000px; }
-        th, td { text-align: left; padding: 18px 25px; border-bottom: 1px solid rgba(0,0,0,0.03); }
-        th { background-color: #F8F9FA; color: var(--text-light); font-weight: 500; position: sticky; top: 0; z-index: 10; }
-        tr { transition: background-color 0.2s; }
-        tr:hover { background-color: #FDFBF9; }
-        
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
-        .badge-pending { background-color: #FFEBEE; color: var(--status-pending); }
-        .badge-completed { background-color: #E8F5E9; color: var(--status-completed); }
-        
-        .cat-badge { font-weight: 600; color: var(--primary-brown); background: #EFEBE9; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; }
-        .cat-urgent { color: var(--status-pending); background: #FFEBEE; }
-        .cat-locker { color: var(--category-locker); background: #EDE7F6; }
-        .cat-inquiry { color: var(--category-info); background: #E1F5FE; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+        .empty-state i { font-size: 3rem; color: #E0E0E0; display: block; margin-bottom: 16px; }
 
-        .action-btn { background-color: var(--primary-brown); color: #FFFFFF; border: none; padding: 8px 18px; border-radius: 8px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .action-btn:hover { background-color: #3E2723; transform: translateY(-1px); }
-        .action-btn:active { transform: translateY(0); }
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 12px 16px; border-top: 1px solid rgba(0,0,0,0.05); box-shadow: 0 -4px 12px rgba(0,0,0,0.06); display: flex; gap: 10px; }
+        .reset-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid #FFCDD2; background: #FFF5F5; color: var(--pending); font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .refresh-btn { flex: 2; padding: 13px; border-radius: 12px; border: none; background: var(--primary); color: #fff; font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .refresh-btn:active { transform: scale(0.97); }
 
-        .empty-table { text-align: center; padding: 60px; color: var(--text-light); }
-        .empty-table i { font-size: 3rem; color: #E0E0E0; display: block; margin-bottom: 15px; }
-
-        @keyframes fadeInRow { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .new-row { animation: fadeInRow 0.4s var(--premium-easing) forwards; }
+        @media (min-width: 600px) {
+            .stats-grid { grid-template-columns: repeat(4, 1fr); padding: 20px 24px 0; }
+            .filter-wrap { padding: 16px 24px 0; }
+            .section-title { padding: 16px 24px 10px; }
+            .cards-wrap { padding: 0 24px 100px; display: grid; grid-template-columns: 1fr 1fr; }
+            .bottom-bar { padding: 14px 24px; }
+        }
+        @media (min-width: 1024px) {
+            .cards-wrap { grid-template-columns: repeat(3, 1fr); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="admin-logo">EPHRAIM<span>Premium Admin V3</span></div>
-        <ul class="nav-list">
-            <li class="nav-item active"><i class="fas fa-desktop"></i> 실시간 통합 관제</li>
-            <li class="nav-item"><i class="fas fa-headset"></i> 현장 불편 (소음/온도/청소)</li>
-            <li class="nav-item"><i class="fas fa-box"></i> 사물함 관리</li>
-            <li class="nav-item"><i class="far fa-credit-card"></i> 결제/예약 조회</li>
-            <li class="nav-item"><i class="far fa-comment-dots"></i> 1:1 고객 건의함</li>
-            <li class="nav-item" style="margin-top: 30px;"><i class="fas fa-chart-line"></i> 지점별 통계</li>
-            <li class="nav-item"><i class="fas fa-cog"></i> 시스템 설정</li>
-        </ul>
-        <!-- Firebase 연결 상태 -->
-        <div class="connection-status disconnected" id="conn-status">
-            <div class="status-dot"></div>
+    <div class="top-bar">
+        <div class="top-bar-logo">EPHRAIM<small>ADMIN DASHBOARD</small></div>
+        <div class="conn-badge" id="conn-badge">
+            <div class="conn-dot"></div>
             <span id="conn-text">연결 중...</span>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="main-header">
-            <div style="display: flex; align-items: center;">
-                <h1 class="header-title">실시간 통합 관제 대시보드</h1>
-                <button class="reset-btn" onclick="clearAllData()"><i class="fas fa-trash-alt"></i> 데이터 초기화</button>
-            </div>
-            <div class="header-branch-select">
-                <span>모니터링 대상: </span>
-                <span style="color:var(--primary-brown); font-weight:500;">전체 직영점 (계양직영점/박촌역점/부천상동점/부천신중동점)</span>
-            </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label"><i class="fas fa-inbox"></i> 총 접수</div>
+            <div class="stat-value" id="stat-total">0<small>건</small></div>
         </div>
-
-        <!-- 필터 바 -->
-        <div class="filter-bar">
-            <button class="filter-btn active" onclick="setFilter('전체')">전체</button>
-            <button class="filter-btn" onclick="setFilter('대기중')">대기중만</button>
-            <button class="filter-btn" onclick="setFilter('소음')">소음</button>
-            <button class="filter-btn" onclick="setFilter('온도')">온도</button>
-            <button class="filter-btn" onclick="setFilter('청소')">청소</button>
-            <button class="filter-btn" onclick="setFilter('사물함')">사물함</button>
-            <button class="filter-btn" onclick="setFilter('예약문의')">예약문의</button>
-            <button class="filter-btn" onclick="setFilter('요금문의')">요금문의</button>
+        <div class="stat-card">
+            <div class="stat-label"><i class="fas fa-check-circle"></i> 완료율</div>
+            <div class="stat-value" id="stat-rate">0<small>%</small></div>
         </div>
-
-        <div class="stats-container">
-            <div class="stats-card">
-                <p class="stats-card-title"><i class="fas fa-inbox"></i> 오늘 총 접수 건수</p>
-                <p class="stats-card-value" id="stat-total">0 <span>건</span></p>
-            </div>
-            <div class="stats-card" id="card-critical">
-                <p class="stats-card-title critical-text">🚨 현장 불편 (소음/온도/청소)</p>
-                <p class="stats-card-value critical-text" id="stat-critical">0 <span>건 대기중</span></p>
-            </div>
-            <div class="stats-card" id="card-locker">
-                <p class="stats-card-title locker-text">📦 사물함 신청/관리</p>
-                <p class="stats-card-value locker-text" id="stat-locker">0 <span>건 대기중</span></p>
-            </div>
-            <div class="stats-card">
-                <p class="stats-card-title"><i class="fas fa-check-circle"></i> 금일 처리 완료율</p>
-                <p class="stats-card-value" id="stat-rate">0 <span>%</span></p>
-            </div>
+        <div class="stat-card" id="card-critical">
+            <div class="stat-label">🚨 현장불편 대기</div>
+            <div class="stat-value" id="stat-critical">0<small>건</small></div>
         </div>
-
-        <div class="table-section">
-            <div class="table-header-row">
-                <h2 class="table-title">실시간 접수 목록 <span style="font-weight:300; font-size:0.9rem; color:#757575;" id="realtime-label">(Firebase 연결 대기 중)</span></h2>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 8%;">접수번호</th>
-                            <th style="width: 12%;">지점명</th>
-                            <th style="width: 10%;">분류</th>
-                            <th style="width: 12%;">좌석/사물함 번호</th>
-                            <th style="width: 31%;">요청 상세 내용</th>
-                            <th style="width: 12%;">접수 일시</th>
-                            <th style="width: 7%;">상태</th>
-                            <th style="width: 8%; text-align:center;">조치</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inquiry-list">
-                        <tr><td colspan="8" class="empty-table"><i class="fas fa-satellite-dish"></i>Firebase에 연결하면<br>실시간 데이터가 표시됩니다.</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="stat-card" id="card-locker">
+            <div class="stat-label">📦 사물함 대기</div>
+            <div class="stat-value" id="stat-locker">0<small>건</small></div>
         </div>
     </div>
 
-    <!-- ✅ Firebase SDK (CDN) -->
+    <div class="filter-wrap">
+        <button class="filter-btn active" onclick="setFilter('전체')">전체</button>
+        <button class="filter-btn" onclick="setFilter('대기중')">대기중</button>
+        <button class="filter-btn" onclick="setFilter('소음')">소음</button>
+        <button class="filter-btn" onclick="setFilter('온도')">온도</button>
+        <button class="filter-btn" onclick="setFilter('청소')">청소</button>
+        <button class="filter-btn" onclick="setFilter('사물함')">사물함</button>
+        <button class="filter-btn" onclick="setFilter('예약문의')">예약문의</button>
+        <button class="filter-btn" onclick="setFilter('요금문의')">요금문의</button>
+    </div>
+
+    <div class="section-title">
+        실시간 접수 목록
+        <span id="realtime-label">연결 대기 중</span>
+    </div>
+
+    <div class="cards-wrap" id="cards-wrap">
+        <div class="empty-state">
+            <i class="fas fa-satellite-dish"></i>
+            <p>Firebase에 연결하면<br>실시간 데이터가 표시됩니다.</p>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="reset-btn" onclick="clearAllData()"><i class="fas fa-trash-alt"></i> 초기화</button>
+        <button class="refresh-btn" onclick="renderDashboard()"><i class="fas fa-sync-alt"></i> 새로고침</button>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getDatabase, ref, onValue, update, remove, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-        import { getDatabase as getDbConn, ref as connRef, onValue as onConnValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-        // ======================================================
-        // 🔥 여기에 Firebase 설정을 붙여넣으세요 (index.html과 동일)
-        // ======================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCt-HiQkDoeAxnJN7VwsmEpoxwWQmCC69E",
             authDomain: "esc-info-86e12.firebaseapp.com",
@@ -209,34 +165,29 @@
             messagingSenderId: "411200026634",
             appId: "1:411200026634:web:afd8074af0d02ee93087f3"
         };
-        // ======================================================
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const inquiriesRef = ref(db, 'inquiries');
 
-        let allInquiries = {}; // { firebaseKey: inquiryObj }
+        let allInquiries = {};
         let currentFilter = '전체';
 
-        // 연결 상태 모니터링
-        const connRef2 = ref(db, '.info/connected');
-        onValue(connRef2, (snap) => {
-            const isConnected = snap.val();
-            const statusEl = document.getElementById('conn-status');
-            const textEl = document.getElementById('conn-text');
-            const labelEl = document.getElementById('realtime-label');
-            if (isConnected) {
-                statusEl.className = 'connection-status connected';
-                textEl.textContent = 'Firebase 실시간 연결됨';
-                labelEl.textContent = '(실시간 자동 업데이트 중)';
+        onValue(ref(db, '.info/connected'), (snap) => {
+            const badge = document.getElementById('conn-badge');
+            const text = document.getElementById('conn-text');
+            const label = document.getElementById('realtime-label');
+            if (snap.val()) {
+                badge.className = 'conn-badge on';
+                text.textContent = '실시간 연결됨';
+                label.textContent = '실시간 자동 업데이트 중';
             } else {
-                statusEl.className = 'connection-status disconnected';
-                textEl.textContent = '연결 끊김';
-                labelEl.textContent = '(연결 재시도 중...)';
+                badge.className = 'conn-badge';
+                text.textContent = '연결 끊김';
+                label.textContent = '재연결 중...';
             }
         });
 
-        // 실시간 데이터 수신
         onValue(query(inquiriesRef, orderByChild('timestamp')), (snapshot) => {
             allInquiries = {};
             snapshot.forEach((child) => {
@@ -245,59 +196,17 @@
             renderDashboard();
         });
 
-        function getFilteredInquiries() {
+        function getFiltered() {
             const items = Object.values(allInquiries).reverse();
             if (currentFilter === '전체') return items;
             if (currentFilter === '대기중') return items.filter(i => i.status === 'PENDING');
             return items.filter(i => i.category === currentFilter);
         }
 
-        function renderDashboard() {
-            renderTable();
+        window.renderDashboard = function() {
             updateStats();
-        }
-
-        function renderTable() {
-            const listBody = document.getElementById('inquiry-list');
-            const items = getFilteredInquiries();
-
-            if (items.length === 0) {
-                listBody.innerHTML = '<tr><td colspan="8" class="empty-table"><i class="fas fa-inbox"></i>접수된 내역이 없습니다.</td></tr>';
-                return;
-            }
-
-            listBody.innerHTML = '';
-            items.forEach((inquiry, index) => {
-                const row = document.createElement('tr');
-                if (index < 3) row.classList.add('new-row');
-
-                let catClass = "cat-badge";
-                if (inquiry.category === "소음" || inquiry.category === "온도" || inquiry.category === "청소") catClass += " cat-urgent";
-                else if (inquiry.category === "사물함") catClass += " cat-locker";
-                else if (inquiry.category === "요금문의" || inquiry.category === "예약문의") catClass += " cat-inquiry";
-
-                row.innerHTML = `
-                    <td style="color:var(--text-light);">#${inquiry.id}</td>
-                    <td style="font-weight:500;">${inquiry.branch}</td>
-                    <td><span class="${catClass}">${inquiry.category}</span></td>
-                    <td style="font-weight:500; color:var(--primary-brown);">${inquiry.seat}</td>
-                    <td style="line-height:1.4;">${inquiry.content}</td>
-                    <td style="color:var(--text-light); font-size:0.85rem; letter-spacing:-0.5px;">${inquiry.time || '시간 기록 없음'}</td>
-                    <td>
-                        <span class="badge ${inquiry.status === 'PENDING' ? 'badge-pending' : 'badge-completed'}">
-                            ${inquiry.status === 'PENDING' ? '대기중' : '완료됨'}
-                        </span>
-                    </td>
-                    <td style="text-align:center;">
-                        ${inquiry.status === 'PENDING'
-                            ? `<button class="action-btn" onclick="window.completeInquiry('${inquiry._key}')">완료 처리</button>`
-                            : '<i class="fas fa-check-circle" style="color:var(--status-completed); font-size:1.2rem;"></i>'
-                        }
-                    </td>
-                `;
-                listBody.appendChild(row);
-            });
-        }
+            renderCards();
+        };
 
         function updateStats() {
             const all = Object.values(allInquiries);
@@ -307,49 +216,79 @@
             const locker = all.filter(i => i.category === '사물함' && i.status === 'PENDING').length;
             const rate = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-            document.getElementById('stat-total').innerHTML = `${total} <span>건</span>`;
-            document.getElementById('stat-critical').innerHTML = `${critical} <span>건 대기</span>`;
-            document.getElementById('stat-locker').innerHTML = `${locker} <span>건 대기</span>`;
-            document.getElementById('stat-rate').innerHTML = `${rate} <span>%</span>`;
+            document.getElementById('stat-total').innerHTML = `${total}<small>건</small>`;
+            document.getElementById('stat-rate').innerHTML = `${rate}<small>%</small>`;
+            document.getElementById('stat-critical').innerHTML = `${critical}<small>건</small>`;
+            document.getElementById('stat-locker').innerHTML = `${locker}<small>건</small>`;
 
-            const cardCritical = document.getElementById('card-critical');
-            cardCritical.style.backgroundColor = critical > 0 ? '#FFEBEE' : '#FFFFFF';
-            cardCritical.style.borderColor = critical > 0 ? '#FFCDD2' : 'rgba(0,0,0,0.02)';
-
-            const cardLocker = document.getElementById('card-locker');
-            cardLocker.style.backgroundColor = locker > 0 ? '#EDE7F6' : '#FFFFFF';
-            cardLocker.style.borderColor = locker > 0 ? '#D1C4E9' : 'rgba(0,0,0,0.02)';
+            document.getElementById('card-critical').className = critical > 0 ? 'stat-card alert-red' : 'stat-card';
+            document.getElementById('card-locker').className = locker > 0 ? 'stat-card alert-purple' : 'stat-card';
         }
 
-        // 완료 처리
+        function renderCards() {
+            const wrap = document.getElementById('cards-wrap');
+            const items = getFiltered();
+
+            if (items.length === 0) {
+                wrap.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>접수된 내역이 없습니다.</p></div>`;
+                return;
+            }
+
+            wrap.innerHTML = '';
+            items.forEach((item, idx) => {
+                let catClass = 'cat-badge';
+                if (['소음','온도','청소'].includes(item.category)) catClass += ' cat-urgent';
+                else if (item.category === '사물함') catClass += ' cat-locker';
+                else if (['요금문의','예약문의'].includes(item.category)) catClass += ' cat-inquiry';
+
+                const isPending = item.status === 'PENDING';
+                const card = document.createElement('div');
+                card.className = 'inquiry-card';
+                card.style.animationDelay = `${idx * 0.04}s`;
+                card.innerHTML = `
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <span class="card-id">#${item.id}</span>
+                            <span class="${catClass}">${item.category}</span>
+                        </div>
+                        <span class="status-badge ${isPending ? 'status-pending' : 'status-done'}">${isPending ? '대기중' : '완료됨'}</span>
+                    </div>
+                    <div class="card-branch">${item.branch}</div>
+                    <div class="card-seat">좌석/구역: ${item.seat}</div>
+                    <div class="card-content">${item.content}</div>
+                    <div class="card-bottom">
+                        <span class="card-time"><i class="far fa-clock" style="margin-right:4px;"></i>${item.time || '-'}</span>
+                        ${isPending
+                            ? `<button class="complete-btn" onclick="window.completeInquiry('${item._key}')"><i class="fas fa-check"></i> 완료 처리</button>`
+                            : `<span style="color:var(--completed);font-size:0.85rem;"><i class="fas fa-check-circle"></i> 처리완료</span>`
+                        }
+                    </div>
+                `;
+                wrap.appendChild(card);
+            });
+        }
+
         window.completeInquiry = async function(key) {
             try {
                 await update(ref(db, `inquiries/${key}`), { status: 'COMPLETED' });
-            } catch (e) {
-                alert('처리 중 오류가 발생했습니다.');
-                console.error(e);
-            }
+            } catch(e) { alert('처리 중 오류가 발생했습니다.'); }
         };
 
-        // 전체 삭제
         window.clearAllData = async function() {
-            if (confirm("모든 접수 데이터를 영구 삭제하시겠습니까?\n\n⚠️ 이 작업은 되돌릴 수 없습니다.")) {
+            if (confirm('모든 접수 데이터를 삭제하시겠습니까?\n\n⚠️ 되돌릴 수 없습니다.')) {
                 try {
                     await remove(inquiriesRef);
-                    alert("초기화 완료. Firebase 데이터가 모두 삭제되었습니다.");
-                } catch (e) {
-                    alert('삭제 중 오류가 발생했습니다.');
-                }
+                    alert('초기화 완료!');
+                } catch(e) { alert('삭제 중 오류가 발생했습니다.'); }
             }
         };
 
-        // 필터
         window.setFilter = function(filter) {
             currentFilter = filter;
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === filter || (filter === '전체' && btn.textContent === '전체'));
+                btn.classList.toggle('active', btn.textContent.trim() === filter);
             });
-            renderTable();
+            renderCards();
         };
     </script>
 </body>
