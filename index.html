@@ -44,11 +44,12 @@
         .content { padding: 20px 25px 30px 25px; overflow-y: auto; flex-grow: 1; }
         .content::-webkit-scrollbar { width: 0px; }
         
-        .ad-banner-container { width: 100%; height: 70px; border-radius: 16px; overflow: hidden; margin-bottom: 25px; position: relative; box-shadow: var(--shadow-light); cursor: pointer; }
+        /* 메인 화면 배너 수정 부분 */
+        .ad-banner-container { width: 100%; height: 75px; border-radius: 16px; overflow: hidden; margin-bottom: 25px; position: relative; box-shadow: var(--shadow-light); cursor: pointer; }
         .ad-slider { display: flex; width: 200%; height: 100%; animation: slideAd 8s infinite var(--premium-easing); }
-        .ad-slide { width: 50%; height: 100%; display: flex; align-items: center; padding: 0 20px; box-sizing: border-box; color: white; }
-        .ad-badge { background: rgba(255,255,255,0.25); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; margin-right: 12px; letter-spacing: 0.5px; }
-        .ad-text { font-size: 0.85rem; font-weight: 500; letter-spacing: -0.3px; line-height: 1.4; }
+        .ad-slide { width: 50%; height: 100%; display: flex; align-items: center; padding: 0 15px; box-sizing: border-box; color: white; flex-shrink: 0; }
+        .ad-badge { background: rgba(255,255,255,0.25); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; margin-right: 10px; letter-spacing: 0.5px; flex-shrink: 0; }
+        .ad-text { font-size: 0.8rem; font-weight: 500; letter-spacing: -0.3px; line-height: 1.4; word-break: keep-all; }
         
         @keyframes slideAd { 0%, 45% { transform: translateX(0); } 50%, 95% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
 
@@ -127,9 +128,9 @@
         .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(253,251,249,0.85); display: flex; align-items: center; justify-content: center; z-index: 999; backdrop-filter: blur(4px); }
         .loading-spinner { width: 36px; height: 36px; border: 3px solid var(--accent-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9118774019383180"
      crossorigin="anonymous"></script>
-    </style>
 </head>
 <body>
 
@@ -146,7 +147,6 @@
                 <div class="branch-btn" onclick="goToMain('부천신중동점')">부천신중동점 <i class="fas fa-chevron-right"></i></div>
             </div>
 
-            <!-- 광고 배너 (애드센스 적용 전 임시 문구) -->
             <div class="front-ad-container">
                 <div class="front-ad-box">
                     <div class="front-ad-slide active" style="background: linear-gradient(135deg, #5D4037, #4E342E);">
@@ -336,14 +336,10 @@
 
     </div>
 
-    <!-- ✅ Firebase SDK (CDN) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getDatabase, ref, push, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-        // ======================================================
-        // 🔥 여기에 Firebase 설정을 붙여넣으세요 (아래 가이드 참고)
-        // ======================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCt-HiQkDoeAxnJN7VwsmEpoxwWQmCC69E",
             authDomain: "esc-info-86e12.firebaseapp.com",
@@ -353,7 +349,6 @@
             messagingSenderId: "411200026634",
             appId: "1:411200026634:web:afd8074af0d02ee93087f3"
         };
-        // ======================================================
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
@@ -364,15 +359,11 @@
         let myInquiryKeys = JSON.parse(sessionStorage.getItem('myInquiryKeys') || '[]');
         let allInquiries = {};
 
-        // Firebase에서 실시간 데이터 수신
         onValue(query(inquiriesRef, orderByChild('timestamp')), (snapshot) => {
             allInquiries = {};
-            snapshot.forEach((child) => {
-                allInquiries[child.key] = child.val();
-            });
+            snapshot.forEach((child) => { allInquiries[child.key] = child.val(); });
         });
 
-        // ---- 가격 데이터 ----
         const commonPricingArray = [
             { title: "일일 이용권", note: "*환불, 시간 정지 불가", icon: "fas fa-hourglass-half", items: [ {time: "3시간", price: "6,000원"}, {time: "4시간", price: "7,000원"}, {time: "6시간", price: "9,000원"}, {time: "8시간", price: "10,000원"}, {time: "12시간", price: "13,000원"} ] },
             { title: "시간 이용권", note: "*퇴장시 반드시 퇴실 체크", icon: "fas fa-stopwatch", items: [ {time: "30시간", price: "50,000원"}, {time: "50시간", price: "65,000원"}, {time: "100시간", price: "120,000원"}, {time: "200시간", price: "220,000원"} ] },
@@ -391,18 +382,17 @@
         const branchRoomData = { '계양직영점': [ { title: "스터디룸1 (4인)", desc: "1시간 7,000원", icon: "fas fa-users" }, { title: "스터디룸2 (6인)", desc: "1시간 10,000원", icon: "fas fa-users-cog" } ], '박촌역점': [ { title: "스터디룸1 (4인)", desc: "1시간 7,000원", icon: "fas fa-users" } ], '부천상동점': [ { title: "스터디룸1 (4인)", desc: "1시간 7,000원", icon: "fas fa-users" } ], '부천신중동점': [ { title: "스터디룸1 (4인)", desc: "1시간 7,000원", icon: "fas fa-users" } ], 'default': [ { title: "안내", desc: "스터디룸 정보 준비 중", icon: "fas fa-info-circle" } ] };
         const branchWifiData = { '계양직영점': 'hello1234', '박촌역점': 'escbc0909', '부천상동점': 'escsd0909', '부천신중동점': 'escjd0909', 'default': '안내 데스크 문의' };
 
-        // 앞 페이지 광고 배너 자동 페이드 전환
         (function() {
             const slides = document.querySelectorAll('.front-ad-slide');
             let current = 0;
-            setInterval(() => {
-                slides[current].classList.remove('active');
-                current = (current + 1) % slides.length;
-                slides[current].classList.add('active');
-            }, 4000);
+            if(slides.length > 0) {
+                setInterval(() => {
+                    slides[current].classList.remove('active');
+                    current = (current + 1) % slides.length;
+                    slides[current].classList.add('active');
+                }, 4000);
+            }
         })();
-
-        if (window.location.hash) { history.replaceState(null, '', window.location.pathname); }
 
         window.goToMain = function(branchName) {
             currentBranch = branchName;
@@ -464,12 +454,6 @@
             }
         });
 
-        document.addEventListener('keydown', function(event) {
-            const tagName = event.target.tagName.toLowerCase();
-            if (tagName === 'input' || tagName === 'textarea' || tagName === 'select') return;
-            if (event.key === 'Backspace') { event.preventDefault(); if (activeSubScreen !== "" || currentBranch !== "") { history.back(); } }
-        });
-
         window.openMyPage = function() {
             const listContainer = document.getElementById('mypage-list');
             listContainer.innerHTML = '';
@@ -494,17 +478,11 @@
             return `${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
         }
 
-        function setLoading(btnId, isLoading) {
-            const btn = document.getElementById(btnId);
-            if (!btn) return;
-            btn.disabled = isLoading;
-            btn.innerHTML = isLoading ? '<i class="fas fa-spinner fa-spin"></i> 전송 중...' : btn.dataset.originalText;
-        }
-
         async function saveInquiry(newInquiry, btnId, successMsg) {
             const btn = document.getElementById(btnId);
-            if (btn) btn.dataset.originalText = btn.innerHTML;
-            setLoading(btnId, true);
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 전송 중...';
             try {
                 const newRef = await push(inquiriesRef, { ...newInquiry, timestamp: Date.now() });
                 myInquiryKeys.push(newRef.key);
@@ -512,10 +490,10 @@
                 alert(successMsg);
                 history.back();
             } catch (e) {
-                console.error(e);
-                alert("전송에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+                alert("전송에 실패했습니다. 다시 시도해 주세요.");
             } finally {
-                setLoading(btnId, false);
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
         }
 
@@ -525,26 +503,23 @@
             const detailVal = document.getElementById('complain-detail').value;
             if (!seatVal) { alert("좌석 번호 또는 구역을 입력해 주세요."); return; }
             let category = "기타";
-            if (typeVal.includes("[소음/매너]")) category = "소음";
-            else if (typeVal.includes("[온도 조절]")) category = "온도";
+            if (typeVal.includes("[소음]")) category = "소음";
+            else if (typeVal.includes("[온도]")) category = "온도";
             else if (typeVal.includes("[클리닝]")) category = "청소";
-            let content = typeVal.replace(/\[.*?\]\s*/, '');
-            if (detailVal) content += " - " + detailVal;
+            let content = typeVal.replace(/\[.*?\]\s*/, '') + (detailVal ? " - " + detailVal : "");
             const newInquiry = { id: Date.now().toString().slice(-6), branch: currentBranch, category, seat: seatVal, content, time: getFormattedDateTime(), status: 'PENDING' };
-            await saveInquiry(newInquiry, 'btn-complain', `[${currentBranch}]\n관리자에게 긴급 알림이 전송되었습니다.\n신속하게 조치하겠습니다.`);
+            await saveInquiry(newInquiry, 'btn-complain', "긴급 알림이 전송되었습니다.");
         };
 
         window.submitForm = async function(screenId, category, selectId, detailId, seatId) {
             const selectVal = selectId ? document.getElementById(selectId).value : "";
             const detailVal = detailId ? document.getElementById(detailId).value : "";
             const seatVal = seatId ? document.getElementById(seatId).value : "N/A";
-            if (!selectVal && !detailVal) { alert("문의하실 내용을 작성해 주세요."); return; }
-            let content = selectVal || "";
-            if (selectVal && detailVal) content += " - " + detailVal;
-            else if (!selectVal && detailVal) content = detailVal;
-            const btnId = { 'screen-payment': 'btn-payment', 'screen-room': 'btn-room', 'screen-locker': 'btn-locker', 'screen-inquiry': 'btn-inquiry' }[screenId] || '';
-            const newInquiry = { id: Date.now().toString().slice(-6), branch: currentBranch, category, seat: seatVal || "N/A", content, time: getFormattedDateTime(), status: 'PENDING' };
-            await saveInquiry(newInquiry, btnId, `[${currentBranch}]\n성공적으로 접수되었습니다.\n관리자가 확인 후 안내해 드리겠습니다.`);
+            if (!selectVal && !detailVal) { alert("내용을 입력해 주세요."); return; }
+            let content = (selectVal ? selectVal + " " : "") + detailVal;
+            const btnId = { 'screen-payment': 'btn-payment', 'screen-room': 'btn-room', 'screen-locker': 'btn-locker', 'screen-inquiry': 'btn-inquiry' }[screenId];
+            const newInquiry = { id: Date.now().toString().slice(-6), branch: currentBranch, category, seat: seatVal, content, time: getFormattedDateTime(), status: 'PENDING' };
+            await saveInquiry(newInquiry, btnId, "성공적으로 접수되었습니다.");
         };
     </script>
 </body>
